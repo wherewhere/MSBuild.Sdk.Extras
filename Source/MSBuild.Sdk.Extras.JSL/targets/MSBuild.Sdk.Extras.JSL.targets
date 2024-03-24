@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 ***********************************************************************************************
-MSBuild.Sdk.Extras.Jsl.targets
+MSBuild.Sdk.Extras.JSL.targets
 
 WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
           created a backup copy.  Incorrect changes to this file will make it
@@ -12,7 +12,7 @@ Copyright (c) wherewhere. All rights reserved.
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Sdk.Extras.Jsl.Tasks.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Sdk.Extras.JSL.Tasks.targets" />
 
   <PropertyGroup>
     <DefaultLanguageSourceExtension>.jsl</DefaultLanguageSourceExtension>

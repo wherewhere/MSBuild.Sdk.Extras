@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34707.107
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Jsl", "Samples.Jsl\Samples.Jsl.vjsproj", "{48E16A45-9AFC-482B-8C7C-AF17BB4319DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.JSL", "Samples.JSL\Samples.JSL.vjsproj", "{48E16A45-9AFC-482B-8C7C-AF17BB4319DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

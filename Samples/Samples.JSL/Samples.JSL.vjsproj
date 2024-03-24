@@ -1,6 +1,6 @@
 ﻿<Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.Jsl\sdk\Sdk.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JSL\sdk\Sdk.props" />
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,6 +11,6 @@
     <Content Include="**\*.jsl" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.Jsl\sdk\Sdk.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JSL\sdk\Sdk.targets" />
 
 </Project>
