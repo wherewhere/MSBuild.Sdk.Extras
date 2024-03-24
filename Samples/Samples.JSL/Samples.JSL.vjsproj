@@ -3,12 +3,13 @@
   <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JSL\sdk\Sdk.props" />
   
   <PropertyGroup>
+    <DebugType>full</DebugType>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net2.0</TargetFramework>
+    <TargetFramework>net4.8</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="**\*.jsl" />
+    <Content Include="**\*.jsl" Exclude="**\obj\**\*.jsl;**\bin\**\*.jsl" />
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JSL\sdk\Sdk.targets" />

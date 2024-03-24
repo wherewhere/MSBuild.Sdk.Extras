@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 ***********************************************************************************************
-MSBuild.Sdk.Extras.JSL.targets
+MSBuild.Sdk.Extras.JS.targets
 
 WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
           created a backup copy.  Incorrect changes to this file will make it
@@ -12,13 +12,13 @@ Copyright (c) wherewhere. All rights reserved.
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Sdk.Extras.JSL.Tasks.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Sdk.Extras.JS.Tasks.targets" />
 
   <PropertyGroup>
-    <DefaultLanguageSourceExtension>.jsl</DefaultLanguageSourceExtension>
-    <Language>VJS</Language>
+    <DefaultLanguageSourceExtension>.js</DefaultLanguageSourceExtension>
+    <Language>JS</Language>
     <TargetRuntime>Managed</TargetRuntime>
-    <DefaultProjectTypeGuid Condition="'$(DefaultProjectTypeGuid)' == ''">{A4E5E504-D854-438C-823F-CB8DAC34A7AF}</DefaultProjectTypeGuid>
+    <DefaultProjectTypeGuid Condition="'$(DefaultProjectTypeGuid)' == ''">{2BF48DFA-63CB-4EDF-8CD5-6AC1B80C5827}</DefaultProjectTypeGuid>
     <AppDesignerFolder Condition="'$(AppDesignerFolder)' == ''">Properties</AppDesignerFolder>
     <AlwaysUseNumericalSuffixInItemNames>true</AlwaysUseNumericalSuffixInItemNames>
   </PropertyGroup>
@@ -29,7 +29,10 @@ Copyright (c) wherewhere. All rights reserved.
   </ItemGroup>
 
   <PropertyGroup>
-    <_VjcDir>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\</_VjcDir>
+    <_Jsc40Dir Condition="Exists('$(SystemRoot)\Microsoft.NET\Framework64\v4.0.30319\jsc.exe')">$(SystemRoot)\Microsoft.NET\Framework64\v4.0.30319\</_Jsc40Dir>
+    <_Jsc40Dir Condition="$(_Jsc40Dir) == ''">$(SystemRoot)\Microsoft.NET\Framework\v4.0.30319\</_Jsc40Dir>
+    <_Jsc20Dir Condition="Exists('$(SystemRoot)\Microsoft.NET\Framework64\v2.0.50727\jsc.exe')">$(SystemRoot)\Microsoft.NET\Framework64\v2.0.50727\</_Jsc20Dir>
+    <_Jsc20Dir Condition="$(_Jsc20Dir) == ''">$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\</_Jsc20Dir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -51,34 +54,30 @@ Copyright (c) wherewhere. All rights reserved.
 
     <PropertyGroup>
       <DefineConstants>$(DefineConstants);$(Configuration.ToUpperInvariant())</DefineConstants>
+      <_JscDir Condition="$([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '4'))">$(_Jsc40Dir)</_JscDir>
+      <_JscDir Condition="$(_JscDir) == ''">$(_Jsc20Dir)</_JscDir>
 
-      <_DebugArgument Condition="'$(DebugType)' != ''">/debug:$(DebugType.ToLowerInvariant()) </_DebugArgument>
-      <_DebugArgument Condition="'$(_DebugArgument)' == ''">/debug </_DebugArgument>
+      <_PlatformArgument Condition="'$(Platform)' != ''">/platform:$(Platform.ToLowerInvariant()) </_PlatformArgument>
       <_OutputTypeArgument Condition="'$(OutputType)' != ''">/target:$(OutputType.ToLowerInvariant()) </_OutputTypeArgument>
       <_NoWarnArgument Condition="'$(NoWarn)' != ''">/nowarn:$(NoWarn.Replace(";", ",").Replace(" ", ",")) </_NoWarnArgument>
       <_WarnArgument Condition="'$(WarningLevel)' != ''">/warn:$(WarningLevel) </_WarnArgument>
-      <_DefineArgument Condition="'$(DefineConstants)' != ''">/define:$(DefineConstants.TrimStart(';')) </_DefineArgument>
+      <_DefineArgument Condition="'$(DefineConstants)' != ''">/define:$(DefineConstants.TrimStart(';').Replace(";", ",")) </_DefineArgument>
       <_Win32ResourceArgument Condition="'$(Win32Resource)' != ''">/win32res:$(Win32Resource) </_Win32ResourceArgument>
-      <_MainArgument Condition="'$(StartupObject)' != ''">/main:$(StartupObject) </_MainArgument>
 
-      <_VjcSwitches>/nologo </_VjcSwitches>
-      <_VjcSwitches Condition="'$(Optimize)' == 'True'">$(_VjcSwitches)/optimize </_VjcSwitches>
-      <_VjcSwitches Condition="'$(WarnAsError)' == 'True'">$(_VjcSwitches)/warnaserror </_VjcSwitches>
+      <_JscSwitches>/nologo </_JscSwitches>
+      <_VjcSwitches Condition="'$(Optimize)' == 'True'">$(_VjcSwitches)/fast </_VjcSwitches>
+      <_JscSwitches Condition="'$(WarnAsError)' == 'True'">$(_JscSwitches)/warnaserror </_JscSwitches>
     </PropertyGroup>
 
-    <RemoveReferencePath ReferencePath="@(ReferencePath)">
-      <Output TaskParameter="References" ItemName="__References" />
-    </RemoveReferencePath>
-
-    <FormatStringArray StringArray="@(__References)" Format="&quot;{0}&quot;">
+    <FormatStringArray StringArray="@(ReferencePath)" Format="&quot;{0}&quot;">
       <Output TaskParameter="Results" ItemName="_References" />
     </FormatStringArray>
 
-    <Exec Command="&quot;$(_VjcDir)vjc.exe&quot; $(_VjcSwitches)$(_DebugArgument)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_MainArgument) /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_References) @(Compile, ' ')">
-      <Output TaskParameter="ExitCode" PropertyName="_VjcExitCode" />
+    <Exec Command="&quot;$(_JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)/debug /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_References) @(Compile, ' ')">
+      <Output TaskParameter="ExitCode" PropertyName="_JscExitCode" />
     </Exec>
 
-    <Error Text="VJC failed" Condition="'$(_VjcExitCode)' != '0'" />
+    <Error Text="Jsc failed" Condition="'$(_JscExitCode)' != '0'" />
 
     <CallTarget Targets="$(TargetsTriggeredByCompilation)" Condition="'$(TargetsTriggeredByCompilation)' != ''"/>
   </Target>

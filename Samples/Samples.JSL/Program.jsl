@@ -1,6 +1,7 @@
 ﻿package Samples.Jsl;
 
 import System.*;
+import System.Runtime.InteropServices.*;
 
 public class Program
 {
