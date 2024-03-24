@@ -1,0 +1,11 @@
+﻿package Samples.Jsl;
+
+import System.*;
+
+public class Program
+{
+    public static void main(String[] args)
+    {
+        Console.WriteLine(Environment.get_Version());
+    }
+}

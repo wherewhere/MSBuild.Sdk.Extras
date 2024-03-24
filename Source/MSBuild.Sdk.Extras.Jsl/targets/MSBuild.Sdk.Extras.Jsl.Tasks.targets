@@ -1,0 +1,40 @@
+<Project>
+
+  <UsingTask
+    TaskName="RemoveReferencePath"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <ReferencePath ParameterType="System.String[]" Required="true" />
+      <References ParameterType="System.String[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Xml" />
+      <Reference Include="System.Xml.Linq" />
+      <Using Namespace="System.Xml.Linq" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            if (ReferencePath == null)
+            {
+                return _Success;
+            }
+
+            try
+            {
+                string[] removes = new string[] { "vjslib.dll", "vjscor.dll", "vjslibcw.dll", "mscorlib.dll", "System.dll" };
+                List<string> references = new List<string>(ReferencePath);
+                references.RemoveAll(x => Array.Exists(removes, y => x.EndsWith(y, StringComparison.OrdinalIgnoreCase)));
+                References = references.ToArray();
+                _Success = true;
+            }
+            catch (Exception)
+            {
+                Log.LogError("Failed to remove ReferencePath.");
+                _Success = false;
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+</Project>

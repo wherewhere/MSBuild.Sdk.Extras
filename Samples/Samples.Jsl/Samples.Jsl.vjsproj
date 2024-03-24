@@ -1,0 +1,16 @@
+﻿<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.Jsl\sdk\Sdk.props" />
+  
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="**\*.jsl" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.Jsl\sdk\Sdk.targets" />
+
+</Project>
