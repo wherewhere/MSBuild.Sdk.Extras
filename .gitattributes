@@ -1,0 +1,3 @@
+*.jsl linguist-language=Java
+*.props linguist-language=XML
+*.targets linguist-language=XML
