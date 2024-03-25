@@ -13,6 +13,37 @@ Copyright (c) wherewhere. All rights reserved.
 <Project>
 
   <UsingTask
+    TaskName="GetFilePaths"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Files ParameterType="System.String[]" Required="true" />
+      <Paths ParameterType="System.String[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            if (Files == null)
+            {
+                return _Success;
+            }
+
+            try
+            {
+                Paths = Files.Select(x => x.Substring(0, x.LastIndexOfAny(new[] { '\\', '/' }))).ToHashSet().ToArray();
+                _Success = true;
+            }
+            catch (Exception)
+            {
+                Log.LogError("Failed to get paths.");
+                _Success = false;
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask
     TaskName="FormatStringArray"
     TaskFactory="CodeTaskFactory"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
@@ -22,7 +53,6 @@ Copyright (c) wherewhere. All rights reserved.
       <Results ParameterType="System.String[]" Output="true" />
     </ParameterGroup>
     <Task>
-      <Using Namespace="System.Linq" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
             if (StringArray == null)
@@ -37,7 +67,7 @@ Copyright (c) wherewhere. All rights reserved.
             }
             catch (Exception)
             {
-                Log.LogError("Failed to remove ReferencePath.");
+                Log.LogError("Failed to format " + Format + " .");
                 _Success = false;
             }
         ]]>

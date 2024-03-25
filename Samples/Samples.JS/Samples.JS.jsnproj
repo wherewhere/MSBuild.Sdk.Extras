@@ -7,10 +7,6 @@
     <TargetFramework>net4.8</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="**\*.js" Exclude="**\obj\**\*.js;**\bin\**\*.js" />
-  </ItemGroup>
-
   <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JS\sdk\Sdk.targets" />
 
 </Project>

@@ -36,6 +36,10 @@ Copyright (c) wherewhere. All rights reserved.
     <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="**\*.jsl" Exclude="**\obj\**\*.jsl;**\bin\**\*.jsl" />
+  </ItemGroup>
+
   <Target Name="CreateManifestResourceNames"
           Condition="'@(EmbeddedResource)' != ''"
           DependsOnTargets="$(CreateManifestResourceNamesDependsOn)">

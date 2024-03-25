@@ -56,7 +56,6 @@ Copyright (c) wherewhere. All rights reserved.
       <Results ParameterType="System.String[]" Output="true" />
     </ParameterGroup>
     <Task>
-      <Using Namespace="System.Linq" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
             if (StringArray == null)
@@ -71,7 +70,7 @@ Copyright (c) wherewhere. All rights reserved.
             }
             catch (Exception)
             {
-                Log.LogError("Failed to remove ReferencePath.");
+                Log.LogError("Failed to format " + Format + " .");
                 _Success = false;
             }
         ]]>
@@ -89,6 +88,7 @@ Copyright (c) wherewhere. All rights reserved.
       <OutputFile ParameterType="Microsoft.Build.Framework.ITaskItem" Output="true" />
     </ParameterGroup>
     <Task>
+      <Using Namespace="System.Security" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
             if (OutputFile == null && OutputDirectory == null)
@@ -223,7 +223,18 @@ import System.Reflection.*;
                     }
                     catch (Exception ex)
                     {
-                        throw new IOException(string.Format("MSB5003: Failed to create a temporary file. Temporary files folder is full or its path is incorrect. {0}", ex.Message), ex);
+                        if (ex is UnauthorizedAccessException
+                            || ex is NotSupportedException
+                            || (ex is ArgumentException && !(ex is ArgumentNullException))
+                            || ex is SecurityException
+                            || ex is IOException)
+                        {
+                            throw new IOException(string.Format("MSB5003: Failed to create a temporary file. Temporary files folder is full or its path is incorrect. {0}", ex.Message), ex);
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
 
@@ -237,8 +248,19 @@ import System.Reflection.*;
             }
             catch (Exception ex)
             {
-                Log.LogErrorWithCodeFromResources("WriteCodeFragment.CouldNotWriteOutput", (OutputFile == null) ? String.Empty : OutputFile.ItemSpec, ex.Message);
-                return false;
+                if (ex is UnauthorizedAccessException
+                    || ex is NotSupportedException
+                    || (ex is ArgumentException && !(ex is ArgumentNullException))
+                    || ex is SecurityException
+                    || ex is IOException)
+                {
+                    Log.LogErrorWithCodeFromResources("WriteCodeFragment.CouldNotWriteOutput", (OutputFile == null) ? String.Empty : OutputFile.ItemSpec, ex.Message);
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
             }
 
             Log.LogMessageFromResources(MessageImportance.Low, "WriteCodeFragment.GeneratedFile", OutputFile.ItemSpec);

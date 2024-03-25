@@ -39,6 +39,10 @@ Copyright (c) wherewhere. All rights reserved.
     <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="**\*.js" Exclude="**\obj\**\*.js;**\bin\**\*.js" />
+  </ItemGroup>
+
   <Target Name="CreateManifestResourceNames"
           Condition="'@(EmbeddedResource)' != ''"
           DependsOnTargets="$(CreateManifestResourceNamesDependsOn)">
@@ -99,11 +103,19 @@ Copyright (c) wherewhere. All rights reserved.
       <_JscSwitches Condition="'$(WarnAsError)' == 'True'">$(_JscSwitches)/warnaserror </_JscSwitches>
     </PropertyGroup>
 
-    <FormatStringArray StringArray="@(ReferencePath)" Format="&quot;{0}&quot;">
+    <GetFilePaths Files="@(ReferencePath)">
+      <Output TaskParameter="Paths" ItemName="__References" />
+    </GetFilePaths>
+
+    <FormatStringArray StringArray="@(__References)" Format="&quot;{0}&quot;">
       <Output TaskParameter="Results" ItemName="_References" />
     </FormatStringArray>
 
-    <Exec Command="&quot;$(_JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)/debug /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_References) @(Compile, ' ')">
+    <FormatStringArray StringArray="@(Compile)" Format="&quot;{0}&quot;">
+      <Output TaskParameter="Results" ItemName="_Compile" />
+    </FormatStringArray>
+
+    <Exec Command="&quot;$(_JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)/debug /out:&quot;@(IntermediateAssembly)&quot; /lib:@(_References) @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_JscExitCode" />
     </Exec>
 
