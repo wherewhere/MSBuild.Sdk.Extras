@@ -16,7 +16,7 @@ Copyright (c) wherewhere. All rights reserved.
 
   <PropertyGroup>
     <DefaultLanguageSourceExtension>.js</DefaultLanguageSourceExtension>
-    <Language>JS</Language>
+    <Language>JScript</Language>
     <TargetRuntime>Managed</TargetRuntime>
     <DefaultProjectTypeGuid Condition="'$(DefaultProjectTypeGuid)' == ''">{2BF48DFA-63CB-4EDF-8CD5-6AC1B80C5827}</DefaultProjectTypeGuid>
     <AppDesignerFolder Condition="'$(AppDesignerFolder)' == ''">Properties</AppDesignerFolder>
@@ -43,6 +43,36 @@ Copyright (c) wherewhere. All rights reserved.
           Condition="'@(EmbeddedResource)' != ''"
           DependsOnTargets="$(CreateManifestResourceNamesDependsOn)">
     <!-- Required by Microsoft.Common.targets -->
+  </Target>
+
+  <!--
+    Note that this must run before every invocation of CoreCompile to ensure that all compiler
+    runs see the generated assembly info. There is at least one scenario involving Xaml
+    where CoreCompile is invoked without other potential hooks such as Compile or CoreBuild,
+    etc., so we hook directly on to CoreCompile. Furthermore, we  must run *after*
+    PrepareForBuild to ensure that the intermediate directory has been created.
+
+    Targets that generate Compile items are also expected to run before
+    BeforeCompile targets (common targets convention).
+   -->
+  <Target Name="GenerateJSAssemblyInfo"
+          BeforeTargets="BeforeCompile;CoreCompile"
+          DependsOnTargets="PrepareForBuild;CoreGenerateJSAssemblyInfo"
+          Condition="'$(GenerateAssemblyInfo)' == 'true'" />
+
+  <Target Name="CoreGenerateJSAssemblyInfo"
+          DependsOnTargets="CreateGeneratedAssemblyInfoInputsCacheFile"
+          Inputs="$(GeneratedAssemblyInfoInputsCacheFile)"
+          Outputs="$(GeneratedAssemblyInfoFile)">
+    <ItemGroup>
+      <!-- Ensure the generated assemblyinfo file is not already part of the Compile sources, as a workaround for https://github.com/dotnet/sdk/issues/114 -->
+      <Compile Remove="$(GeneratedAssemblyInfoFile)" />
+    </ItemGroup>
+
+    <WriteCodeFragment AssemblyAttributes="@(AssemblyAttribute)" Language="$(Language)" OutputFile="$(GeneratedAssemblyInfoFile)">
+      <Output TaskParameter="OutputFile" ItemName="Compile" />
+      <Output TaskParameter="OutputFile" ItemName="FileWrites" />
+    </WriteCodeFragment>
   </Target>
 
   <Target Name="CoreCompile"
