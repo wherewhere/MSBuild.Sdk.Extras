@@ -97,18 +97,30 @@ Copyright (c) wherewhere. All rights reserved.
 
       <_VjcSwitches>/nologo </_VjcSwitches>
       <_VjcSwitches Condition="'$(Optimize)' == 'True'">$(_VjcSwitches)/optimize </_VjcSwitches>
-      <_VjcSwitches Condition="'$(WarnAsError)' == 'True'">$(_VjcSwitches)/warnaserror </_VjcSwitches>
+      <_VjcSwitches Condition="'$(TreatWarningsAsErrors)' == 'True'">$(_VjcSwitches)/warnaserror </_VjcSwitches>
     </PropertyGroup>
 
     <RemoveReferencePath ReferencePath="@(ReferencePath)">
-      <Output TaskParameter="References" ItemName="__References" />
+      <Output TaskParameter="References" ItemName="__ReferencePath" />
     </RemoveReferencePath>
 
-    <FormatStringArray StringArray="@(__References)" Format="&quot;{0}&quot;">
-      <Output TaskParameter="Results" ItemName="_References" />
+    <FormatStringArray StringArray="@(__ReferencePath)" Format="&quot;{0}&quot;">
+      <Output TaskParameter="Results" ItemName="_ReferencePath" />
     </FormatStringArray>
 
-    <Exec Command="&quot;$(_VjcDir)vjc.exe&quot; $(_VjcSwitches)$(_DebugArgument)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_MainArgument) /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_References) @(Compile, ' ')">
+    <FormatStringArray StringArray="@(Compile)" Format="&quot;{0}&quot;">
+      <Output TaskParameter="Results" ItemName="_Compile" />
+    </FormatStringArray>
+
+    <FormatStringArray StringArray="@(LinkResource)" Format="&quot;{0}&quot;" Condition="@(LinkResource) != ''">
+      <Output TaskParameter="Results" ItemName="_LinkResource" />
+    </FormatStringArray>
+
+    <PropertyGroup>
+      <_LinkResourceArgument Condition="'@(_LinkResource)' != ''">/linkresource:@(_LinkResource, ',') </_LinkResourceArgument>
+    </PropertyGroup>
+
+    <Exec Command="&quot;$(_VjcDir)vjc.exe&quot; $(_VjcSwitches)$(_DebugArgument)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_MainArgument)$(_LinkResourceArgument) /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_ReferencePath) @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_VjcExitCode" />
     </Exec>
 
@@ -117,7 +129,7 @@ Copyright (c) wherewhere. All rights reserved.
     <CallTarget Targets="$(TargetsTriggeredByCompilation)" Condition="'$(TargetsTriggeredByCompilation)' != ''"/>
   </Target>
   
-  <!-- Target is called by the language server. No-op for ILProj as there is no language service support. -->
+  <!-- Target is called by the language server. No-op for VJSProj as there is no language service support. -->
   <Target Name="CompileDesignTime" />
 
   <!-- Import design time targets for Roslyn Project System. These are only available if Visual Studio is installed. -->

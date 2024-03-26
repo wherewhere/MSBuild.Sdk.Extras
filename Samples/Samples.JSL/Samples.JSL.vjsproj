@@ -1,7 +1,7 @@
 ﻿<Project>
 
   <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JSL\sdk\Sdk.props" />
-  
+
   <PropertyGroup>
     <DebugType>full</DebugType>
     <OutputType>Exe</OutputType>
