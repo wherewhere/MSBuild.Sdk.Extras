@@ -1,0 +1,11 @@
+﻿<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.PY\sdk\Sdk.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net4.8.1</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.PY\sdk\Sdk.targets" />
+
+</Project>

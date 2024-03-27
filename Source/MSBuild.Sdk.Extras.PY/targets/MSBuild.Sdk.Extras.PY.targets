@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+***********************************************************************************************
+MSBuild.Sdk.Extras.PY.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) wherewhere. All rights reserved.
+***********************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Sdk.Extras.PY.Tasks.targets" />
+
+  <PropertyGroup>
+    <DefaultLanguageSourceExtension>.py</DefaultLanguageSourceExtension>
+    <Language>Python</Language>
+    <TargetRuntime>Managed</TargetRuntime>
+    <DefaultProjectTypeGuid Condition="'$(DefaultProjectTypeGuid)' == ''">{02DC99E0-DC43-4E91-B840-503FC4593E1B}</DefaultProjectTypeGuid>
+    <AppDesignerFolder Condition="'$(AppDesignerFolder)' == ''">Properties</AppDesignerFolder>
+    <AlwaysUseNumericalSuffixInItemNames>true</AlwaysUseNumericalSuffixInItemNames>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="Managed" />
+    <ProjectCapability Include="ReferencesFolder" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_IpycDir>$(ProgramFiles)\IronPython 3.4\</_IpycDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IronPython" Version="3.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="**\*.py" Exclude="**\obj\**\*.py;**\bin\**\*.py" />
+  </ItemGroup>
+
+  <Target Name="CreateManifestResourceNames"
+          Condition="'@(EmbeddedResource)' != ''"
+          DependsOnTargets="$(CreateManifestResourceNamesDependsOn)">
+    <!-- Required by Microsoft.Common.targets -->
+  </Target>
+
+  <Target Name="CoreCompile"
+          Inputs="$(MSBuildAllProjects);
+                  @(Compile)"
+          Outputs="@(IntermediateAssembly)"
+          Returns=""
+          DependsOnTargets="$(CoreCompileDependsOn)">
+
+    <PropertyGroup>
+      <DefineConstants>$(DefineConstants);$(Configuration.ToUpperInvariant())</DefineConstants>
+
+      <_OutputTypeArgument Condition="'$(OutputType)' != ''">/target:&quot;$(OutputType.ToLowerInvariant())&quot; </_OutputTypeArgument>
+      <_PlatformArgument Condition="'$(Platform)' != ''">/platform:&quot;$(Platform.ToLowerInvariant())&quot; </_PlatformArgument>
+      <_FileVersionArgument Condition="'$(FileVersion)' != ''">/fileversion:&quot;$(FileVersion)&quot; </_FileVersionArgument>
+      <_ProductVersionArgument Condition="'$(ProductVersion)' != ''">/productversion:&quot;$(ProductVersion)&quot; </_ProductVersionArgument>
+      <_ProductArgument Condition="'$(Product)' != ''">/productname:&quot;$(Product)&quot; </_ProductArgument>
+      <_CopyrightArgument Condition="'$(Copyright)' != ''">/copyright:&quot;$(Copyright)&quot; </_CopyrightArgument>
+    </PropertyGroup>
+
+    <FormatStringArray StringArray="@(Compile)" Format="&quot;{0}&quot;">
+      <Output TaskParameter="Results" ItemName="_Compile" />
+    </FormatStringArray>
+
+    <Exec Command="&quot;$(_IpycDir)ipyc.exe&quot; $(_PlatformArgument)$(_FileVersionArgument)$(_ProductVersionArgument)$(_ProductArgument)$(_CopyrightArgument)/out:&quot;@(IntermediateAssembly)&quot; @(_Compile, ' ')">
+      <Output TaskParameter="ExitCode" PropertyName="_IpycExitCode" />
+    </Exec>
+
+    <Error Text="Ipyc failed" Condition="'$(_IpycExitCode)' != '0'" />
+
+    <CallTarget Targets="$(TargetsTriggeredByCompilation)" Condition="'$(TargetsTriggeredByCompilation)' != ''"/>
+  </Target>
+  
+  <!-- Target is called by the language server. No-op for IPYProj as there is no language service support. -->
+  <Target Name="CompileDesignTime" />
+
+  <!-- Import design time targets for Roslyn Project System. These are only available if Visual Studio is installed. -->
+  <!-- Required for project to load in Visual Studio. -->
+  <PropertyGroup>
+    <ManagedDesignTimeTargetsPath Condition="'$(ManagedDesignTimeTargetsPath)'==''">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\Managed\Microsoft.Managed.DesignTime.targets</ManagedDesignTimeTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(ManagedDesignTimeTargetsPath)" Condition="'$(ManagedDesignTimeTargetsPath)' != '' and Exists('$(ManagedDesignTimeTargetsPath)')" />
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+
+</Project>

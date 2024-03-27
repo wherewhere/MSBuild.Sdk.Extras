@@ -5,9 +5,13 @@
   <PropertyGroup>
     <DebugType>full</DebugType>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net4.8</TargetFramework>
+    <TargetFramework>net4.8.1</TargetFramework>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.JSL\sdk\Sdk.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Samples.JSL.Interop\Samples.JSL.Interop.csproj" />
+  </ItemGroup>
 
 </Project>
