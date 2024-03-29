@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+***********************************************************************************************
+MSBuild.Sdk.Extras.PY.Tasks.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) wherewhere. All rights reserved.
+***********************************************************************************************
+-->
+<Project>
+
+  <UsingTask
+    TaskName="FormatStringArray"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <StringArray ParameterType="System.String[]" Required="true" />
+      <Format ParameterType="System.String" Required="true" />
+      <Results ParameterType="System.String[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            if (StringArray == null)
+            {
+                return _Success;
+            }
+
+            try
+            {
+                Results = StringArray.Select(x => string.Format(Format, x)).ToArray();
+                _Success = true;
+            }
+            catch (Exception)
+            {
+                Log.LogError("Failed to format " + Format + " .");
+                _Success = false;
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+</Project>
