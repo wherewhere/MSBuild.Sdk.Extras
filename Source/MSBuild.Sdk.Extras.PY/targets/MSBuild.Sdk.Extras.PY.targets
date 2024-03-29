@@ -29,7 +29,7 @@ Copyright (c) wherewhere. All rights reserved.
   </ItemGroup>
 
   <PropertyGroup>
-    <_IpycDir>$(ProgramFiles)\IronPython 3.4\</_IpycDir>
+    <_IpycDir>C:\Program Files\IronPython 3.4\</_IpycDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -50,6 +50,27 @@ Copyright (c) wherewhere. All rights reserved.
     <!-- Required by Microsoft.Common.targets -->
   </Target>
 
+  <!--
+    Note that this must run before every invocation of CoreCompile to ensure that all compiler
+    runs see the generated assembly info. There is at least one scenario involving Xaml
+    where CoreCompile is invoked without other potential hooks such as Compile or CoreBuild,
+    etc., so we hook directly on to CoreCompile. Furthermore, we  must run *after*
+    PrepareForBuild to ensure that the intermediate directory has been created.
+
+    Targets that generate Compile items are also expected to run before
+    BeforeCompile targets (common targets convention).
+   -->
+  <Target Name="GeneratePYAssemblyInfo"
+          BeforeTargets="BeforeCompile;CoreCompile"
+          DependsOnTargets="PrepareForBuild;CoreGeneratePYAssemblyInfo"
+          Condition="'$(GenerateAssemblyInfo)' == 'true'" />
+
+  <Target Name="CoreGeneratePYAssemblyInfo"
+          DependsOnTargets="CreateGeneratedAssemblyInfoInputsCacheFile"
+          Inputs=""
+          Outputs="">
+  </Target>
+
   <Target Name="CoreCompile"
           Inputs="$(MSBuildAllProjects);
                   @(Compile)"
@@ -63,16 +84,18 @@ Copyright (c) wherewhere. All rights reserved.
       <_OutputTypeArgument Condition="'$(OutputType)' != ''">/target:&quot;$(OutputType.ToLowerInvariant())&quot; </_OutputTypeArgument>
       <_PlatformArgument Condition="'$(Platform)' != ''">/platform:&quot;$(Platform.ToLowerInvariant())&quot; </_PlatformArgument>
       <_FileVersionArgument Condition="'$(FileVersion)' != ''">/fileversion:&quot;$(FileVersion)&quot; </_FileVersionArgument>
-      <_ProductVersionArgument Condition="'$(ProductVersion)' != ''">/productversion:&quot;$(ProductVersion)&quot; </_ProductVersionArgument>
+      <_InformationalVersionArgument Condition="'$(InformationalVersion)' != ''">/productversion:&quot;$(InformationalVersion)&quot; </_InformationalVersionArgument>
       <_ProductArgument Condition="'$(Product)' != ''">/productname:&quot;$(Product)&quot; </_ProductArgument>
       <_CopyrightArgument Condition="'$(Copyright)' != ''">/copyright:&quot;$(Copyright)&quot; </_CopyrightArgument>
+
+      <_IpycSwitches>/nologo </_IpycSwitches>
     </PropertyGroup>
 
     <FormatStringArray StringArray="@(Compile)" Format="&quot;{0}&quot;">
       <Output TaskParameter="Results" ItemName="_Compile" />
     </FormatStringArray>
 
-    <Exec Command="&quot;$(_IpycDir)ipyc.exe&quot; $(_PlatformArgument)$(_FileVersionArgument)$(_ProductVersionArgument)$(_ProductArgument)$(_CopyrightArgument)/out:&quot;@(IntermediateAssembly)&quot; @(_Compile, ' ')">
+    <Exec Command="&quot;$(_IpycDir)ipyc.exe&quot; $(_IpycSwitches)$(_OutputTypeArgument)$(_PlatformArgument)$(_FileVersionArgument)$(_InformationalVersionArgument)$(_ProductArgument)$(_CopyrightArgument)/out:&quot;@(IntermediateAssembly)&quot; @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_IpycExitCode" />
     </Exec>
 

@@ -99,6 +99,7 @@ Copyright (c) wherewhere. All rights reserved.
       <_Win32ResourceArgument Condition="'$(Win32Resource)' != ''">/win32res:$(Win32Resource) </_Win32ResourceArgument>
 
       <_JscSwitches>/nologo </_JscSwitches>
+      <_JscSwitches Condition="'$(DebugType)' != ''">$(_JscSwitches)/debug </_JscSwitches>
       <_JscSwitches Condition="'$(Optimize)' == 'True'">$(_JscSwitches)/fast </_JscSwitches>
       <_JscSwitches Condition="'$(TreatWarningsAsErrors)' == 'True'">$(_JscSwitches)/warnaserror </_JscSwitches>
     </PropertyGroup>
@@ -123,7 +124,7 @@ Copyright (c) wherewhere. All rights reserved.
       <_LinkResourceArgument Condition="'@(_LinkResource)' != ''">/linkresource:@(_LinkResource, ',') </_LinkResourceArgument>
     </PropertyGroup>
 
-    <Exec Command="&quot;$(_JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_LinkResourceArgument)/debug /out:&quot;@(IntermediateAssembly)&quot; /lib:@(_ReferencePath) @(_Compile, ' ')">
+    <Exec Command="&quot;$(_JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_LinkResourceArgument) /out:&quot;@(IntermediateAssembly)&quot; /lib:@(_ReferencePath) @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_JscExitCode" />
     </Exec>
 

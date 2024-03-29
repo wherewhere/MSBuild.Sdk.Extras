@@ -30,7 +30,7 @@ Copyright (c) wherewhere. All rights reserved.
 
             try
             {
-                Paths = Files.Select(x => x.Substring(0, x.LastIndexOfAny(new[] { '\\', '/' }))).ToHashSet().ToArray();
+                Paths = Files.Select(Path.GetDirectoryName).ToHashSet().ToArray();
                 _Success = true;
             }
             catch (Exception)
