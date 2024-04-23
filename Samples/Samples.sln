@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.JS", "Samples.JS\Sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.JSL", "Samples.JSL\Samples.JSL.vjsproj", "{48E16A45-9AFC-482B-8C7C-AF17BB4319DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.JSL.Interop", "Samples.JSL.Interop\Samples.JSL.Interop.csproj", "{F7D7F1FD-95B6-4058-8CB1-FBAFB2CD973C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.PS", "Samples.PS\Samples.PS.pssproj", "{7A7A2B97-FC4C-415D-9A54-2BB6A935DB97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.PS", "Samples.PS\Samples.PS.pssproj", "{7A7A2B97-FC4C-415D-9A54-2BB6A935DB97}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.PY", "Samples.PY\Samples.PY.ipyproj", "{B028BFC1-6475-4D8E-8C4C-2754736ADC37}"
 EndProject
@@ -27,18 +25,14 @@ Global
 		{48E16A45-9AFC-482B-8C7C-AF17BB4319DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48E16A45-9AFC-482B-8C7C-AF17BB4319DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48E16A45-9AFC-482B-8C7C-AF17BB4319DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7D7F1FD-95B6-4058-8CB1-FBAFB2CD973C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7D7F1FD-95B6-4058-8CB1-FBAFB2CD973C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7D7F1FD-95B6-4058-8CB1-FBAFB2CD973C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7D7F1FD-95B6-4058-8CB1-FBAFB2CD973C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A7A2B97-FC4C-415D-9A54-2BB6A935DB97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A7A2B97-FC4C-415D-9A54-2BB6A935DB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7A2B97-FC4C-415D-9A54-2BB6A935DB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A7A2B97-FC4C-415D-9A54-2BB6A935DB97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B028BFC1-6475-4D8E-8C4C-2754736ADC37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

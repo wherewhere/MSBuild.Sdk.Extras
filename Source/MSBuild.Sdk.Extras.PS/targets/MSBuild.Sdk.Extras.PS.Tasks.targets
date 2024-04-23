@@ -14,7 +14,7 @@ Copyright (c) wherewhere. All rights reserved.
 
   <UsingTask
     TaskName="FormatStringArray"
-    TaskFactory="CodeTaskFactory"
+    TaskFactory="RoslynCodeTaskFactory"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <StringArray ParameterType="System.String[]" Required="true" />
@@ -36,7 +36,7 @@ Copyright (c) wherewhere. All rights reserved.
             }
             catch (Exception)
             {
-                Log.LogError("Failed to format " + Format + " .");
+                Log.LogError($"Failed to format {Format}.");
                 _Success = false;
             }
         ]]>

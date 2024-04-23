@@ -29,7 +29,8 @@ Copyright (c) wherewhere. All rights reserved.
   </ItemGroup>
 
   <PropertyGroup>
-    <_VjcDir>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\</_VjcDir>
+    <_Vjc40Dir Condition="$(_Vjc40Dir) == ''">$(SystemRoot)\Microsoft.NET\Framework\v4.0.30319\</_Vjc40Dir>
+    <_Vjc20Dir Condition="$(_Vjc20Dir) == ''">$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\</_Vjc20Dir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -85,6 +86,8 @@ Copyright (c) wherewhere. All rights reserved.
 
     <PropertyGroup>
       <DefineConstants>$(DefineConstants);$(Configuration.ToUpperInvariant())</DefineConstants>
+      <_VjcDir Condition="$([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '4'))">$(_Vjc40Dir)</_VjcDir>
+      <_VjcDir Condition="$(_VjcDir) == ''">$(_Vjc20Dir)</_VjcDir>
 
       <_DebugArgument Condition="'$(DebugType)' != ''">/debug:$(DebugType.ToLowerInvariant()) </_DebugArgument>
       <_DebugArgument Condition="'$(_DebugArgument)' == ''">/debug </_DebugArgument>

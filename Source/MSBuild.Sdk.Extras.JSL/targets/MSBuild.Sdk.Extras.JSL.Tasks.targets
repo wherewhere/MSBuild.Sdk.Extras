@@ -14,7 +14,7 @@ Copyright (c) wherewhere. All rights reserved.
 
   <UsingTask
     TaskName="RemoveReferencePath"
-    TaskFactory="CodeTaskFactory"
+    TaskFactory="RoslynCodeTaskFactory"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <ReferencePath ParameterType="System.String[]" Required="true" />
@@ -30,8 +30,8 @@ Copyright (c) wherewhere. All rights reserved.
 
             try
             {
-                string[] removes = new string[] { "vjslib.dll", "vjscor.dll", "vjslibcw.dll", "mscorlib.dll", "System.dll" };
-                List<string> references = new List<string>(ReferencePath);
+                string[] removes = ["vjslib.dll", "vjscor.dll", "vjslibcw.dll", "mscorlib.dll", "System.dll"];
+                List<string> references = new(ReferencePath);
                 references.RemoveAll(x => Array.Exists(removes, y => x.EndsWith(y, StringComparison.OrdinalIgnoreCase)));
                 References = references.ToArray();
                 _Success = true;
@@ -48,7 +48,7 @@ Copyright (c) wherewhere. All rights reserved.
 
   <UsingTask
     TaskName="FormatStringArray"
-    TaskFactory="CodeTaskFactory"
+    TaskFactory="RoslynCodeTaskFactory"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <StringArray ParameterType="System.String[]" Required="true" />
@@ -70,7 +70,7 @@ Copyright (c) wherewhere. All rights reserved.
             }
             catch (Exception)
             {
-                Log.LogError("Failed to format " + Format + " .");
+                Log.LogError($"Failed to format {Format}.");
                 _Success = false;
             }
         ]]>

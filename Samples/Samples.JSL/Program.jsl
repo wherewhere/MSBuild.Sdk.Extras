@@ -8,6 +8,6 @@ public class Program
     public static void main(String[] args)
     {
         System.out.println(Environment.get_Version());
-        System.out.println(Interop.get_FrameworkDescription());
+        System.out.println(RuntimeInformation.get_FrameworkDescription());
     }
 }
