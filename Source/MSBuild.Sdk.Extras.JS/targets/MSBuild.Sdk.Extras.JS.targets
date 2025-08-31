@@ -88,8 +88,10 @@ Copyright (c) wherewhere. All rights reserved.
 
     <PropertyGroup>
       <DefineConstants>$(DefineConstants);$(Configuration.ToUpperInvariant())</DefineConstants>
-      <_JscDir Condition="$([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '4'))">$(_Jsc40Dir)</_JscDir>
+      <_JscDir Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net4.0'))
+                       or $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard1.0'))">$(_Jsc40Dir)</_JscDir>
       <_JscDir Condition="$(_JscDir) == ''">$(_Jsc20Dir)</_JscDir>
+      <JscDir Condition="$(_JscDir) == ''">$(_JscDir)</JscDir>
 
       <_PlatformArgument Condition="'$(Platform)' != ''">/platform:$(Platform.ToLowerInvariant()) </_PlatformArgument>
       <_OutputTypeArgument Condition="'$(OutputType)' != ''">/target:$(OutputType.ToLowerInvariant()) </_OutputTypeArgument>
@@ -124,7 +126,7 @@ Copyright (c) wherewhere. All rights reserved.
       <_LinkResourceArgument Condition="'@(_LinkResource)' != ''">/linkresource:@(_LinkResource, ',') </_LinkResourceArgument>
     </PropertyGroup>
 
-    <Exec Command="&quot;$(_JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_LinkResourceArgument) /out:&quot;@(IntermediateAssembly)&quot; /lib:@(_ReferencePath) @(_Compile, ' ')">
+    <Exec Command="&quot;$(JscDir)jsc.exe&quot; $(_JscSwitches)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_LinkResourceArgument)$(_PlatformArgument) /out:&quot;@(IntermediateAssembly)&quot; /lib:@(_ReferencePath) @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_JscExitCode" />
     </Exec>
 
