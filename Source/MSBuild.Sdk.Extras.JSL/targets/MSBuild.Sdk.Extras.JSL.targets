@@ -86,8 +86,10 @@ Copyright (c) wherewhere. All rights reserved.
 
     <PropertyGroup>
       <DefineConstants>$(DefineConstants);$(Configuration.ToUpperInvariant())</DefineConstants>
-      <_VjcDir Condition="$([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '4'))">$(_Vjc40Dir)</_VjcDir>
+      <_VjcDir Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net4.0'))
+                       or $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard1.0'))">$(_Vjc40Dir)</_VjcDir>
       <_VjcDir Condition="$(_VjcDir) == ''">$(_Vjc20Dir)</_VjcDir>
+      <VjcDir Condition="$(VjcDir) == ''">$(_VjcDir)</VjcDir>
 
       <_DebugArgument Condition="'$(DebugType)' != ''">/debug:$(DebugType.ToLowerInvariant()) </_DebugArgument>
       <_DebugArgument Condition="'$(_DebugArgument)' == ''">/debug </_DebugArgument>
@@ -123,7 +125,7 @@ Copyright (c) wherewhere. All rights reserved.
       <_LinkResourceArgument Condition="'@(_LinkResource)' != ''">/linkresource:@(_LinkResource, ',') </_LinkResourceArgument>
     </PropertyGroup>
 
-    <Exec Command="&quot;$(_VjcDir)vjc.exe&quot; $(_VjcSwitches)$(_DebugArgument)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_MainArgument)$(_LinkResourceArgument) /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_ReferencePath) @(_Compile, ' ')">
+    <Exec Command="&quot;$([System.IO.Path]::Combine($(VjcDir), 'vjc.exe'))&quot; $(_VjcSwitches)$(_DebugArgument)$(_OutputTypeArgument)$(_NoWarnArgument)$(_WarnArgument)$(_DefineArgument)$(_Win32ResourceArgument)$(_MainArgument)$(_LinkResourceArgument) /out:&quot;@(IntermediateAssembly)&quot; /reference:@(_ReferencePath) @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_VjcExitCode" />
     </Exec>
 

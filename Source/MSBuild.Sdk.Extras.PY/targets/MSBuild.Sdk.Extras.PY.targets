@@ -29,7 +29,8 @@ Copyright (c) wherewhere. All rights reserved.
   </ItemGroup>
 
   <PropertyGroup>
-    <_IpycDir>C:\Program Files\IronPython 3.4\</_IpycDir>
+    <IpycDir Condition="$(IpycDir) == ''">C:\Program Files\IronPython 3.4\</IpycDir>
+    <IronPythonVersion Condition="$(IronPythonVersion) == ''">3.4.2</IronPythonVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,7 +38,7 @@ Copyright (c) wherewhere. All rights reserved.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IronPython" Version="3.4.1" />
+    <PackageReference Include="IronPython" Version="$(IronPythonVersion)" IsImplicitlyDefined="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -87,6 +88,7 @@ Copyright (c) wherewhere. All rights reserved.
       <_InformationalVersionArgument Condition="'$(InformationalVersion)' != ''">/productversion:&quot;$(InformationalVersion)&quot; </_InformationalVersionArgument>
       <_ProductArgument Condition="'$(Product)' != ''">/productname:&quot;$(Product)&quot; </_ProductArgument>
       <_CopyrightArgument Condition="'$(Copyright)' != ''">/copyright:&quot;$(Copyright)&quot; </_CopyrightArgument>
+      <_Win32IconArgument Condition="'$(ApplicationIcon)' != ''">/win32icon:&quot;$(ApplicationIcon)&quot; </_Win32IconArgument>
 
       <_IpycSwitches>/nologo </_IpycSwitches>
     </PropertyGroup>
@@ -95,7 +97,7 @@ Copyright (c) wherewhere. All rights reserved.
       <Output TaskParameter="Results" ItemName="_Compile" />
     </FormatStringArray>
 
-    <Exec Command="&quot;$(_IpycDir)ipyc.exe&quot; $(_IpycSwitches)$(_OutputTypeArgument)$(_PlatformArgument)$(_FileVersionArgument)$(_InformationalVersionArgument)$(_ProductArgument)$(_CopyrightArgument)/out:&quot;@(IntermediateAssembly)&quot; @(_Compile, ' ')">
+    <Exec Command="&quot;$([System.IO.Path]::Combine($(IpycDir), 'ipyc.exe'))&quot; $(_IpycSwitches)$(_OutputTypeArgument)$(_PlatformArgument)$(_FileVersionArgument)$(_InformationalVersionArgument)$(_ProductArgument)$(_CopyrightArgument)$(_Win32IconArgument)/out:&quot;@(IntermediateAssembly)&quot; @(_Compile, ' ')">
       <Output TaskParameter="ExitCode" PropertyName="_IpycExitCode" />
     </Exec>
 

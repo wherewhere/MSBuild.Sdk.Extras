@@ -9,5 +9,7 @@ public class Program
     {
         System.out.println(Environment.get_Version());
         System.out.println(RuntimeInformation.get_FrameworkDescription());
+        System.out.println("Press any key to exit...");
+        Console.ReadKey(true);
     }
 }
