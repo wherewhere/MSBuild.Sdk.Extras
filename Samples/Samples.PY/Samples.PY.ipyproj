@@ -5,6 +5,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <IpycDir>C:\Users\qq251\Downloads\GitHub\ironpython3\bin\Debug\net462</IpycDir>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\..\Source\MSBuild.Sdk.Extras.PY\sdk\Sdk.targets" />
